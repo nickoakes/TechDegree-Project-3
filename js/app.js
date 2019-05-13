@@ -1,3 +1,8 @@
+/*
+    Interactive Form
+    app.js
+*/
+
 //autofocus on first text input when page loads
 $('#name').focus();
 
