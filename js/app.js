@@ -16,10 +16,15 @@ $('#title').on('click', () => {if($('#title option:selected').val() === "other")
 
 //show only the t-shirt color options that match the design selected in the "Design" menu
 $('#design > option').first().attr('disabled', true);
+
+//store designs in separate arrays for later access
 const jsPuns = [$('#color option[value="cornflowerblue"]'), $('#color option[value="darkslategrey"]'), $('#color option[value="gold"]')];
 const jsHeart = [$('#color option[value="tomato"]'), $('#color option[value="steelblue"]'), $('#color option[value="dimgrey"]')];
 $('#color').hide();
 $('#color').prev().hide();
+
+//add event listener to design field to show the colors corresponding to the design selected on click
+//if JS Puns is selected
 
 $('#design').on('click', () => {if($('#design option:selected').val() === "js puns") {
         for(let i = 0; i < jsPuns.length; i++){
@@ -30,6 +35,9 @@ $('#design').on('click', () => {if($('#design option:selected').val() === "js pu
         }
         $('#color:selected').attr("selected", false);
         jsPuns[0].attr("selected", true);
+
+//if I <3 JS is selected
+
     } else if($('#design option:selected').val() === "heart js") {
         for(let i = 0; i < jsHeart.length; i++){
             jsPuns[i].hide();
@@ -39,6 +47,9 @@ $('#design').on('click', () => {if($('#design option:selected').val() === "js pu
         }
         $('#color option:selected').attr("selected", false);
         jsHeart[0].attr("selected", true);
+
+//if neither design is selected
+
     } else {
         $('#color option:selected').attr("selected", false);
         jsPuns[0].attr("selected", true);
@@ -57,6 +68,8 @@ let workshopsSelected = [];
 let conferenceSelected = [];
 let priceP = $('<p id="price"></p>');
 $('.activities').append(priceP);
+
+//prevent selection of multiple morning sessions and multiple afternoon sessions
 
 function activityArrays(array) {
     switch(true) {
@@ -90,10 +103,14 @@ $('.activities').on('click', () => {
     activityArrays(morningActivities);
     activityArrays(afternoonActivities);
 
+//handle conference being selected for the purpose of updating total price
+
     conferenceSelected = [];
     if(conference[0].prop('checked') == true){
         conferenceSelected.push(conference);
     }
+
+//calculate total price and append to DOM
 
     let totalPrice = workshopsSelected.length * 100 + conferenceSelected.length * 200;
     document.querySelector('#price').innerHTML = 'Total Price: $' + totalPrice;
@@ -137,12 +154,16 @@ function missingFieldMessage (field, element) {
     $(id).after(fieldMissing);
 }
 
+//messages to prompt user to complete missing fields
+
 missingFieldMessage('your name', $('#name'));
 missingFieldMessage('a valid email address', $('#mail'));
 missingFieldMessage('your credit card number', $('#cc-num'));
 missingFieldMessage('a credit card number with 13-16 digits', $('#cc-num'));
 missingFieldMessage('a valid 5-digit zip code', $('#zip'));
 missingFieldMessage('your CVV number', $('#cvv'));
+
+//display error message dynamically depending on which field is missing
 
 function errorMessage(field) {
     $('#submit').attr('type', 'button');
@@ -154,35 +175,50 @@ function errorMessage(field) {
 
 function validateFormFields() {
 switch(true) {
+
+//no name entered
+
     case $('#name').val() == '':
     errorMessage($('#name'));
     $('#9').css('visibility', 'visible');
-    break;    
+    break;
+
+//validate email field using a regular expression
 
     case !(/[^@]+@[^\.]+\..+/.test($('#mail').val())):
     errorMessage($('#mail'));
     $('#21').css('visibility', 'visible');
     break;
 
+//no credit card number entered
+
     case $('#cc-num').val() === '':
     errorMessage($('#cc-num'));
     $('#23').css('visibility', 'visible');
     break;
+
+//validate credit card number using a regular expression
 
     case !(/^(\d{13}|\d{14}|\d{15}|\d{16})$/.test($('#cc-num').val())) && $('#cc-num').val() !== '':
     errorMessage($('#cc-num'));
     $('#38').css('visibility', 'visible');
     break;
 
+//validate zipcode using a regular expression
+
     case !(/^\d{5}$/).test($('#zip').val()):
     errorMessage($('#zip'));
     $('#24').css('visibility', 'visible');
     break;
 
+//validate credit card security code using a regular expression
+
     case !(/^\d{3}$/).test($('#cvv').val()):
     errorMessage($('#cvv'));
     $('#15').css('visibility', 'visible');
     break;
+
+//remove red border in default case
 
     default: 
     $('#submit').attr('type', 'submit');
@@ -195,7 +231,7 @@ $('#submit').on('click', () => {
     validateFormFields();
 })
 
-//real time error messages
+//real time error messages on key press
 
 document.addEventListener('keyup', (e) => {
     validateFormFields();
